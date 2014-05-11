@@ -5,7 +5,7 @@ var app = angular.module('myApp', ['ngGrid']);
 app.service('MyService', function($http) {
     var myData = null;
 
-    var promise = $http.get('http://'+host+'/core/video_views/').success(function (data) {
+    var promise = $http.get('/core/video_views/').success(function (data) {
       myData = data;
     });
 
@@ -32,11 +32,11 @@ app.controller('MyCtrl', function($scope,$http,MyService) {
 	    columnDefs: [{field:'id', displayName:'Id'},
 		    {field:'mobile_no', displayName:'Contact'},
 			{field:'video', displayName:'Video'},
-			{field:'watch_at', displayName:'Watched At'},
+			//{field:'watch_at', displayName:'Watched At'},
 			{field:'survey_at', displayName:'Survey At'},
 			{field:'has_implemented', displayName:'Has Implemented'},
 			{field:'has_interest', displayName:'Has Interest'},
-			{field:'recording_url', displayName:'Feedback'}],
+			{field:'recording_url', displayName:'Feedback', cellTemplate: '<a href="{{row.entity[col.field]}}" target="_new">Listen</div>'}],
 		multiSelect: false,
 		keepLastSelected: true,
 		selectedItems: $scope.selectedItems
@@ -47,12 +47,13 @@ app.controller('MyCtrl', function($scope,$http,MyService) {
 	$scope.survey = function(data) {
 		var obj = $scope.selectedItems[0]
 		if(obj) {
-			$http.get('http://'+host+'/ivr/survey/video_id/'+obj.video+'/mobile_no/'+obj.mobile_no+'/')
+			$http.get('/ivr/survey/video_id/'+obj.video+'/mobile_no/'+obj.mobile_no+'/')
 			.success(function(data) {
 				console.log(data);
+				document.getElementById("notification").innerHTML = JSON.toString(data.Call)
 			})
 			.error(function(data) {
-				alert(data.RestException.Message)
+				document.getElementById("notification").innerHTML = data.RestException.Message
 			})
 		}
 	}
