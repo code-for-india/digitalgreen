@@ -36,9 +36,10 @@ app.controller('MyCtrl', function($scope,$http,MyService) {
 			{field:'survey_at', displayName:'Survey At'},
 			{field:'has_implemented', displayName:'Has Implemented'},
 			{field:'has_interest', displayName:'Has Interest'},
-			{field:'recording_url', displayName:'Feedback', cellTemplate: '<a href="{{row.entity[col.field]}}" target="_new">Listen</div>'}],
+			{field:'recording_url', displayName:'Feedback', cellTemplate: '<div ng-switch="!!row.entity[col.field]"><a class="link" href="{{row.entity[col.field]}}" target="_new" ng-switch-when="true">Listen</a></div>'}],
 		multiSelect: false,
 		keepLastSelected: true,
+		jqueryUITheme: true,
 		selectedItems: $scope.selectedItems
 	};
 	$scope.$on('ngGridEventData', function(){
