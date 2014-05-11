@@ -3,8 +3,9 @@
 
 from pprint import pprint
 import requests
+from django.conf import settings
 
-#from settings import sid, token
+from settings import sid, token
 
 
 def survey(sid, token, url,

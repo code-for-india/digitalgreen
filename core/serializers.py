@@ -19,4 +19,4 @@ class VideoSerializer(serializers.ModelSerializer):
 class VideoViewSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = VideoView
-		fields = ('id', 'mobile_no', 'video', 'watch_at', 'survey_at', 'has_interest', 'has_implemented')
+		fields = ('id', 'mobile_no', 'video', 'watch_at', 'survey_at', 'has_interest', 'has_implemented', 'recording_url')

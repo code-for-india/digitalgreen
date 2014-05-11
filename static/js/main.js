@@ -20,26 +20,41 @@ app.service('MyService', function($http) {
     };
 });
 
-app.controller('MyCtrl', function($scope,MyService) {
+app.controller('MyCtrl', function($scope,$http,MyService) {
 	MyService.promise.then(function() {
 	  	$scope.myData = MyService.doStuff();
 	  	console.log(MyService.doStuff());
 	  	$scope.$apply()
 	});
-
+	$scope.selectedItems = []
 	$scope.myData = [{id: "", mobile_no: "", video: "", watch_at: null, survey_at: null, has_implemented: null, has_interest: null}];
     $scope.gridOptions = { data: 'myData', 
 	    columnDefs: [{field:'id', displayName:'Id'},
 		    {field:'mobile_no', displayName:'Contact'},
 			{field:'video', displayName:'Video'},
-			{field:'watch_at', displayName:'Watch At'},
+			{field:'watch_at', displayName:'Watched At'},
 			{field:'survey_at', displayName:'Survey At'},
 			{field:'has_implemented', displayName:'Has Implemented'},
-			{field:'has_interest', displayName:'Has Interest'}],
-		multiSelect: false
-		};
+			{field:'has_interest', displayName:'Has Interest'},
+			{field:'recording_url', displayName:'Feedback'}],
+		multiSelect: false,
+		keepLastSelected: true,
+		selectedItems: $scope.selectedItems
+	};
+	$scope.$on('ngGridEventData', function(){
+        $scope.gridOptions.selectRow(0, true);
+    });
 	$scope.survey = function(data) {
-		console.log(data)
+		var obj = $scope.selectedItems[0]
+		if(obj) {
+			$http.get('http://'+host+'/ivr/survey/video_id/'+obj.video+'/mobile_no/'+obj.mobile_no+'/')
+			.success(function(data) {
+				console.log(data);
+			})
+			.error(function(data) {
+				alert(data.RestException.Message)
+			})
+		}
 	}
 
 });
