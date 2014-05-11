@@ -175,3 +175,19 @@ def video_view_list(request):
 	video_views = VideoView.objects.all()
 	serializer = VideoViewSerializer(video_views, many=True)
 	return Response(serializer.data)
+
+@api_view(['GET'])
+def video_detail_with_context(request):
+	"""
+	Get all a video_view.
+	"""
+	response = []
+
+	video_views = VideoView.objects.all()
+	#serializer = VideoViewSerializer(video_views, many=True)
+	for video_view in video_views:
+		farmer = Farmer.objects.get(pk=video_view.mobile_no)
+		video = Video.objects.get(pk=video_view.video_id)
+		address = Address.objects.get(pk=farmer.address_id)
+		response.append({'video_view': VideoViewSerializer(video_view).data, 'farmer': FarmerSerializer(farmer).data, 'video': VideoSerializer(video).data, 'address': AddressSerializer(address).data})
+	return Response(response)
